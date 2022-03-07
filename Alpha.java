@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 
 @Sigma("α")
-@TeleOp(name="Alpha", group="ζ")
+@TeleOp(name="Alpha", group="α")
 public class Alpha extends Zeta {
   private static final List<String> DRIVE_ORDER = Arrays.asList("driveLeft", "driveRight");
   private Map<String, DcMotor> drive;

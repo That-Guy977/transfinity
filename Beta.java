@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @Disabled
 @Sigma("β")
-@TeleOp(name="Beta", group="ζ")
+@TeleOp(name="Beta", group="β")
 public class Beta extends Zeta {
   private DcMotor armPitch;
   private Servo armGrab;
