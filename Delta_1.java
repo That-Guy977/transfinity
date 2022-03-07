@@ -15,7 +15,7 @@ public class Delta_1 extends Zeta {
   @Override
   public void init() {
     super.init();
-    servo = (Servo) devices.get("servo");
+    servo = (Servo) devices.get("device");
     if (servo == null) {
       if (status != Status.FAILED)
         updateTelemetry(Status.FAILED);

@@ -3,35 +3,32 @@ package org.firstinspires.ftc.transfinity;
 import java.util.LinkedHashMap;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 
-@Sigma("δ-0")
-@TeleOp(name="Delta 0 - Motor", group="δ")
-public class Delta_0 extends Zeta {
-  private DcMotor motor;
+@TeleOp(name="Delta", group="δ")
+public class Delta extends Zeta {
+  private HardwareDevice device;
 
   @Override
   public void init() {
     super.init();
-    motor = (DcMotor) devices.get("device");
-    if (motor == null) {
+    device = devices.get("device");
+    if (device == null) {
       if (status != Status.FAILED)
         updateTelemetry(Status.FAILED);
       return;
     }
-    motor.setDirection(DcMotor.Direction.FORWARD);
-    motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    device.resetDeviceConfigurationForOpMode();
   }
 
   @Override
   public void loop() {
-    motor.setPower(-gamepad1.left_stick_y);
     updateTelemetry();
   }
 
   private void updateTelemetry() {
     LinkedHashMap<String, Object> telemetryData = new LinkedHashMap<>(1);
-    telemetryData.put("Motor Power", motor.getPower());
+    telemetryData.put("Device", device.getDeviceName());
     updateTelemetry(telemetryData);
   }
 }

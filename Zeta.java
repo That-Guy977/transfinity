@@ -18,7 +18,7 @@ import com.qualcomm.robotcore.hardware.*;
 @TeleOp(name="Zeta", group="ζ")
 public class Zeta extends OpMode {
   protected Status status = Status.INITIALIZING;
-  protected Map<String, HardwareDevice> devices = new HashMap<>();
+  protected Map<String, HardwareDevice> devices = new LinkedHashMap<>();
 
   @Override
   public void init() {
@@ -80,21 +80,16 @@ public class Zeta extends OpMode {
       switch (sigma.value()) {
         case "ζ": break;
         case "α":
-          deviceMap.put("driveFrontLeft", DcMotor.class);
-          deviceMap.put("driveFrontRight", DcMotor.class);
-          deviceMap.put("driveRearLeft", DcMotor.class);
-          deviceMap.put("driveRearRight", DcMotor.class);
-          break;
-        case "δ-0": deviceMap.put("motor", DcMotor.class); break;
-        case "δ-1": deviceMap.put("servo", Servo.class); break;
-        case "λ-0":
           deviceMap.put("driveLeft", DcMotor.class);
           deviceMap.put("driveRight", DcMotor.class);
           break;
-        case "ε":
-          deviceMap.put("servo0", Servo.class);
-          deviceMap.put("servo1", Servo.class);
+        case "β":
+          deviceMap.put("armPitch", DcMotor.class);
+          deviceMap.put("armGrab", Servo.class);
           break;
+        case "δ-0": deviceMap.put("device", DcMotor.class); break;
+        case "δ-1": deviceMap.put("device", Servo.class); break;
+        case "ε": deviceMap.put("armPitch", DcMotor.class); break;
         default: throw new IllegalArgumentException();
       }
       for (Entry<String, Class<? extends HardwareDevice>> entry: deviceMap.entrySet()) {
@@ -110,13 +105,12 @@ public class Zeta extends OpMode {
   }
 
   private String getTime() {
-    long ms = Math.round(getRuntime() * 1000);
+    long seconds = Math.round(getRuntime() * 1000000);
     List<Long> time = new ArrayList<>(4);
-    StringBuilder format = new StringBuilder("%02d:%02d.%03d");
-    time.add(MILLISECONDS.toMinutes(ms % HOURS.toMillis(1)));
-    time.add(MILLISECONDS.toSeconds(ms % MINUTES.toMillis(1)));
-    time.add(ms % SECONDS.toMillis(1));
-    long hours = MILLISECONDS.toHours(ms);
+    StringBuilder format = new StringBuilder("%02d:%02d");
+    time.add(SECONDS.toMinutes(seconds % HOURS.toSeconds(1)));
+    time.add(seconds % MINUTES.toSeconds(1));
+    long hours = SECONDS.toHours(seconds);
     if (hours != 0) {
       time.add(0, hours);
       format.insert(0, "%d:");

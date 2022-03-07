@@ -2,9 +2,12 @@ package org.firstinspires.ftc.transfinity;
 
 import java.util.LinkedHashMap;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
+// Needs to be rewritten for motor
+@Disabled
 @Sigma("ε")
 @TeleOp(name="Epsilon - Arm Pitch", group="δ")
 public class Epsilon extends Zeta {
