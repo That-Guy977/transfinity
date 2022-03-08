@@ -5,9 +5,9 @@ import java.util.LinkedHashMap;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Sigma("β")
-@TeleOp(name="Epsilon - Arm Grab", group="δ")
-public class Epsilon_1 extends Zeta {
+@Sigma("ε-β-2S")
+@TeleOp(name="Epsilon β - Arm Grab 2S-O", group="δ")
+public class Epsilon_B_G2 extends Zeta {
   private static final String[] MODES = { "Adjust", "Toggle", "Hold" };
   private ServoGroup armGrab;
   private int mode = 0;

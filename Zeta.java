@@ -85,11 +85,14 @@ public class Zeta extends OpMode {
           break;
         case "β":
           deviceMap.put("armPitch", DcMotor.class);
-          deviceMap.put("armGrabLeft", Servo.class);
-          deviceMap.put("armGrabRight", Servo.class);
+          deviceMap.put("armGrab", Servo.class);
           break;
         case "δ-0": deviceMap.put("device", DcMotor.class); break;
         case "δ-1": deviceMap.put("device", Servo.class); break;
+        case "ε-β-2S":
+          deviceMap.put("armGrabLeft", Servo.class);
+          deviceMap.put("armGrabRight", Servo.class);
+          break;
         default: throw new IllegalArgumentException();
       }
       for (Entry<String, Class<? extends HardwareDevice>> entry: deviceMap.entrySet()) {
