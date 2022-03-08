@@ -85,11 +85,11 @@ public class Zeta extends OpMode {
           break;
         case "β":
           deviceMap.put("armPitch", DcMotor.class);
-          deviceMap.put("armGrab", Servo.class);
+          deviceMap.put("armGrabLeft", Servo.class);
+          deviceMap.put("armGrabRight", Servo.class);
           break;
         case "δ-0": deviceMap.put("device", DcMotor.class); break;
         case "δ-1": deviceMap.put("device", Servo.class); break;
-        case "ε": deviceMap.put("armPitch", DcMotor.class); break;
         default: throw new IllegalArgumentException();
       }
       for (Entry<String, Class<? extends HardwareDevice>> entry: deviceMap.entrySet()) {
@@ -97,7 +97,7 @@ public class Zeta extends OpMode {
         Class<? extends HardwareDevice> deviceType = entry.getValue();
         devices.put(deviceName, hardwareMap.get(deviceType, deviceName));
       }
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException err) {
       LinkedHashMap<String, Object> telemetryData = new LinkedHashMap<>(1);
       telemetryData.put("Sigma", sigma == null ? "null" : sigma.value());
       updateTelemetry(Status.FAILED, telemetryData);
@@ -105,7 +105,7 @@ public class Zeta extends OpMode {
   }
 
   private String getTime() {
-    long seconds = Math.round(getRuntime() * 1000000);
+    long seconds = Math.round(getRuntime());
     List<Long> time = new ArrayList<>(4);
     StringBuilder format = new StringBuilder("%02d:%02d");
     time.add(SECONDS.toMinutes(seconds % HOURS.toSeconds(1)));
