@@ -32,11 +32,10 @@ public class Alpha extends Zeta {
         updateTelemetry(Status.FAILED);
       return;
     }
-    for (Map.Entry<String, DcMotor> entry: drive.entrySet()) {
-      DcMotor motor = entry.getValue();
+    drive.forEach((key, motor) -> {
       motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-      motor.setDirection(entry.getKey().endsWith("Right") ? DcMotor.Direction.FORWARD : DcMotor.Direction.REVERSE);
-    }
+      motor.setDirection(key.endsWith("Right") ? DcMotor.Direction.FORWARD : DcMotor.Direction.REVERSE);
+    });
   }
 
   @Override
