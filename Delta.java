@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.transfinity;
 
-import java.util.LinkedHashMap;
-
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 
@@ -27,8 +25,6 @@ public class Delta extends Zeta {
   }
 
   private void updateTelemetry() {
-    LinkedHashMap<String, Object> telemetryData = new LinkedHashMap<>(1);
-    telemetryData.put("Device", device.getDeviceName());
-    updateTelemetry(telemetryData);
+    updateTelemetry("Device", device.getDeviceName());
   }
 }

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static java.util.Map.Entry;
 import static java.util.concurrent.TimeUnit.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -18,11 +17,11 @@ import com.qualcomm.robotcore.hardware.*;
 @TeleOp(name="Zeta", group="ζ")
 public class Zeta extends OpMode {
   protected Status status = Status.INITIALIZING;
-  protected Map<String, HardwareDevice> devices = new LinkedHashMap<>();
+  protected Map<String, HardwareDevice> devices = new HashMap<>();
 
   @Override
   public void init() {
-    updateTelemetry(new LinkedHashMap<>(0));
+    updateTime();
     setDevices();
   }
 
@@ -30,9 +29,7 @@ public class Zeta extends OpMode {
   public void init_loop() {
     if (status != Status.FAILED) {
       Sigma sigma = getClass().getAnnotation(Sigma.class);
-      LinkedHashMap<String, Object> telemetryData = new LinkedHashMap<>(1);
-      telemetryData.put("Sigma", sigma == null ? "null" : sigma.value());
-      updateTelemetry(Status.READY, telemetryData);
+      updateTelemetry(Status.READY, "Sigma", sigma == null ? "null" : sigma.value());
     }
   }
 
@@ -45,7 +42,7 @@ public class Zeta extends OpMode {
 
   @Override
   public void loop() {
-    updateTelemetry(new LinkedHashMap<>(0));
+    updateTime();
   }
 
   @Override
@@ -57,7 +54,7 @@ public class Zeta extends OpMode {
   protected void updateTelemetry(LinkedHashMap<String, Object> telemetryData) {
     telemetry.addData("Status", status);
     telemetry.addData("Time", getTime());
-    for (Entry<String, Object> entry: telemetryData.entrySet()) {
+    for (Map.Entry<String, Object> entry: telemetryData.entrySet()) {
       telemetry.addData(entry.getKey(), entry.getValue());
     }
     telemetry.update();
@@ -68,8 +65,23 @@ public class Zeta extends OpMode {
     updateTelemetry(telemetryData);
   }
 
+  protected void updateTelemetry(String caption, Object value) {
+    LinkedHashMap<String, Object> telemetryData = new LinkedHashMap<>(1);
+    telemetryData.put(caption, value);
+    updateTelemetry(telemetryData);
+  }
+
+  protected void updateTelemetry(Status status, String caption, Object value) {
+    this.status = status;
+    updateTelemetry(caption, value);
+  }
+
   protected void updateTelemetry(Status status) {
     updateTelemetry(status, new LinkedHashMap<>(0));
+  }
+
+  protected void updateTime() {
+    updateTelemetry(new LinkedHashMap<>(0));
   }
 
   private void setDevices() {
@@ -85,25 +97,20 @@ public class Zeta extends OpMode {
           break;
         case "β":
           deviceMap.put("armPitch", DcMotor.class);
-          deviceMap.put("armGrab", Servo.class);
-          break;
-        case "δ-0": deviceMap.put("device", DcMotor.class); break;
-        case "δ-1": deviceMap.put("device", Servo.class); break;
-        case "ε-β-2S":
           deviceMap.put("armGrabLeft", Servo.class);
           deviceMap.put("armGrabRight", Servo.class);
           break;
+        case "δ-0": deviceMap.put("device", DcMotor.class); break;
+        case "δ-1": deviceMap.put("device", Servo.class); break;
         default: throw new IllegalArgumentException();
       }
-      for (Entry<String, Class<? extends HardwareDevice>> entry: deviceMap.entrySet()) {
+      for (Map.Entry<String, Class<? extends HardwareDevice>> entry: deviceMap.entrySet()) {
         String deviceName = entry.getKey();
         Class<? extends HardwareDevice> deviceType = entry.getValue();
         devices.put(deviceName, hardwareMap.get(deviceType, deviceName));
       }
     } catch (IllegalArgumentException err) {
-      LinkedHashMap<String, Object> telemetryData = new LinkedHashMap<>(1);
-      telemetryData.put("Sigma", sigma == null ? "null" : sigma.value());
-      updateTelemetry(Status.FAILED, telemetryData);
+      updateTelemetry(Status.FAILED, "Reason", "Sigma: " + (sigma == null ? "null" : sigma.value()));
     }
   }
 

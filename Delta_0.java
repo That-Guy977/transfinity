@@ -30,8 +30,6 @@ public class Delta_0 extends Zeta {
   }
 
   private void updateTelemetry() {
-    LinkedHashMap<String, Object> telemetryData = new LinkedHashMap<>(1);
-    telemetryData.put("Motor Power", motor.getPower());
-    updateTelemetry(telemetryData);
+    updateTelemetry("Motor Power", motor.getPower());
   }
 }
