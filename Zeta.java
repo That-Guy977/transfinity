@@ -100,7 +100,7 @@ public class Zeta extends OpMode {
           deviceMap.put("armGrabLeft", Servo.class);
           deviceMap.put("armGrabRight", Servo.class);
           break;
-        case "λ-0": deviceMap.put("carousel", DcMotor.class);
+        case "λ-0": deviceMap.put("carousel", DcMotor.class); break;
         default: {
          if (sigma.matches("δ-\\d+")) {
            int delta = Integer.parseInt(sigma.substring(2));
