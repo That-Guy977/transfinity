@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Sigma("β")
-@TeleOp(name="Epsilon β - Arm Pitch", group="δ")
+@TeleOp(name="Epsilon β - Arm Pitch", group="ε")
 public class Epsilon_B_P extends Zeta {
   private static final int TICKS_PER_REV = 1440;
   private static final String[] MODES = { "Adjust", "Toggle", "Hold" };

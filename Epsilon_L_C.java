@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Sigma("δ-0")
-@TeleOp(name="Epsilon λ - Carousel", group="δ")
+@TeleOp(name="Epsilon λ - Carousel", group="ε")
 public class Epsilon_L_C extends Zeta {
   private DcMotor motor;
 
