@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @Sigma("β")
 @TeleOp(name="Epsilon β - Arm Grab", group="ε")
 public class Epsilon_B_G extends Zeta {
-  private static final String[] ARMGRAB_DEVICE_NAMES = new String[]{ "armGrabLeft", "armGrabRight" };
+  private static final String[] ARMGRAB_DEVICE_NAMES = { "armGrabLeft", "armGrabRight" };
   private static final String[] MODES = { "Adjust", "Toggle", "Hold" };
   private ArmGrab armGrab;
   private int mode = 0;

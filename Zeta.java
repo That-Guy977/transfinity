@@ -100,6 +100,11 @@ public class Zeta extends OpMode {
           deviceMap.put("armGrabLeft", Servo.class);
           deviceMap.put("armGrabRight", Servo.class);
           break;
+        case "γ":
+          deviceMap.put("driveLeft", DcMotor.class);
+          deviceMap.put("driveRight", DcMotor.class);
+          deviceMap.put("carousel", DcMotor.class);
+          break;
         case "λ-0": deviceMap.put("carousel", DcMotor.class); break;
         default: {
          if (sigma.matches("δ-\\d+")) {

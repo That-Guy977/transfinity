@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @Sigma("α")
 @TeleOp(name="Alpha", group="α")
 public class Alpha extends Zeta {
-  private static final String[] DRIVE_DEVICE_NAMES = new String[]{ "driveLeft", "driveRight" };
+  private static final String[] DRIVE_DEVICE_NAMES = { "driveLeft", "driveRight" };
   private Drive drive;
 
   @Override

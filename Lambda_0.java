@@ -6,28 +6,28 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @Sigma("λ-0")
 @TeleOp(name="Lambda 0 - Carousel", group="λ")
 public class Lambda_0 extends Zeta {
-  private DcMotor motor;
+  private DcMotor carousel;
 
   @Override
   public void init() {
     super.init();
-    motor = (DcMotor) devices.get("carousel");
-    if (motor == null) {
+    carousel = (DcMotor) devices.get("carousel");
+    if (carousel == null) {
       if (status != Status.FAILED)
         updateTelemetry(Status.FAILED);
       return;
     }
-    motor.setDirection(DcMotor.Direction.FORWARD);
-    motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    carousel.setDirection(DcMotor.Direction.FORWARD);
+    carousel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
   }
 
   @Override
   public void loop() {
-    motor.setPower(Boolean.compare(gamepad1.dpad_right, gamepad1.dpad_left));
+    carousel.setPower(Boolean.compare(gamepad1.dpad_right, gamepad1.dpad_left));
     updateTelemetry();
   }
 
   private void updateTelemetry() {
-    updateTelemetry("Motor Power", motor.getPower());
+    updateTelemetry("Carousel Power", carousel.getPower());
   }
 }
