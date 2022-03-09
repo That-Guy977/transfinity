@@ -3,15 +3,15 @@ package org.firstinspires.ftc.transfinity;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@Sigma("δ-0")
-@TeleOp(name="Epsilon λ - Carousel", group="ε")
-public class Epsilon_L_C extends Zeta {
+@Sigma("λ-0")
+@TeleOp(name="Lambda 0 - Carousel", group="ε")
+public class Lambda_0 extends Zeta {
   private DcMotor motor;
 
   @Override
   public void init() {
     super.init();
-    motor = (DcMotor) devices.get("device");
+    motor = (DcMotor) devices.get("carousel");
     if (motor == null) {
       if (status != Status.FAILED)
         updateTelemetry(Status.FAILED);
@@ -23,7 +23,7 @@ public class Epsilon_L_C extends Zeta {
 
   @Override
   public void loop() {
-    motor.setPower(gamepad1.right_stick_y == 0 ? 0 : -gamepad1.right_stick_y);
+    motor.setPower(Boolean.compare(gamepad1.dpad_right, gamepad1.dpad_left));
     updateTelemetry();
   }
 
