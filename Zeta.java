@@ -85,11 +85,11 @@ public class Zeta extends OpMode {
   }
 
   private void setDevices() {
-    Sigma sigma = getClass().getAnnotation(Sigma.class);
+    Sigma sigmaAnnotation = getClass().getAnnotation(Sigma.class);
+    String sigma = sigmaAnnotation == null ? "null" : sigmaAnnotation.value();
     try {
-      if (sigma == null) throw new IllegalArgumentException();
       HashMap<String, Class<? extends HardwareDevice>> deviceMap = new HashMap<>();
-      switch (sigma.value()) {
+      switch (sigma) {
         case "ζ": break;
         case "α":
           deviceMap.put("driveLeft", DcMotor.class);
@@ -100,9 +100,18 @@ public class Zeta extends OpMode {
           deviceMap.put("armGrabLeft", Servo.class);
           deviceMap.put("armGrabRight", Servo.class);
           break;
-        case "δ-0": deviceMap.put("device", DcMotor.class); break;
-        case "δ-1": deviceMap.put("device", Servo.class); break;
-        default: throw new IllegalArgumentException();
+        default: {
+         if (sigma.matches("δ-\\d+")) {
+           int delta = Integer.parseInt(sigma.substring(2));
+           Class<? extends HardwareDevice> device;
+           switch (delta) {
+             case 0: device = DcMotor.class; break;
+             case 1: device = Servo.class; break;
+             default: throw new IllegalArgumentException();
+           }
+           deviceMap.put("device", device);
+         } else throw new IllegalArgumentException();
+        }
       }
       for (Map.Entry<String, Class<? extends HardwareDevice>> entry: deviceMap.entrySet()) {
         String deviceName = entry.getKey();
@@ -110,7 +119,7 @@ public class Zeta extends OpMode {
         devices.put(deviceName, hardwareMap.get(deviceType, deviceName));
       }
     } catch (IllegalArgumentException err) {
-      updateTelemetry(Status.FAILED, "Reason", "Sigma: " + (sigma == null ? "null" : sigma.value()));
+      updateTelemetry(Status.FAILED, "Reason", "Sigma: " + sigma);
     }
   }
 
