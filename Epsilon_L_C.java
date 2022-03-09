@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Sigma("δ-0")
-@TeleOp(name="Delta 0 - Motor", group="δ")
-public class Delta_0 extends Zeta {
+@TeleOp(name="Epsilon λ - Carousel", group="δ")
+public class Epsilon_L_C extends Zeta {
   private DcMotor motor;
 
   @Override
@@ -23,7 +23,7 @@ public class Delta_0 extends Zeta {
 
   @Override
   public void loop() {
-    motor.setPower(gamepad1.left_stick_y == 0 ? 0 : -gamepad1.left_stick_y);
+    motor.setPower(gamepad1.right_stick_y == 0 ? 0 : -gamepad1.right_stick_y);
     updateTelemetry();
   }
 
