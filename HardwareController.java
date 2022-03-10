@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.qualcomm.robotcore.hardware.*;
 
@@ -219,11 +218,13 @@ class GammaController implements Controller {
 
   @Override
   public String toString() {
-    return controllers.stream()
-      .map(GroupController::getClass)
-      .map(Class::getSimpleName)
-      .map((name) -> name.replace("Controller", ""))
-      .collect(Collectors.joining(", ", "[", "]"));
+    return Arrays.toString(
+      controllers.stream()
+        .map(GroupController::getClass)
+        .map(Class::getSimpleName)
+        .map((name) -> name.replace("Controller", ""))
+        .toArray()
+    );
   }
 
   @Override

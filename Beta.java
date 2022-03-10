@@ -11,7 +11,8 @@ public class Beta extends Zeta {
   public void init() {
     controller = new BetaController(hardwareMap, gamepad1);
     if (controller.hasNull())
-      setFailed("null in controller");  }
+      setFailed("null in controller");
+  }
 
   @Override
   public void start() {
