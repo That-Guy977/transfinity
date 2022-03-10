@@ -5,24 +5,22 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @Sigma("α")
 @TeleOp(name="Alpha", group="α")
 public class Alpha extends Zeta {
-  private static final String[] DRIVE_DEVICE_NAMES = { "driveLeft", "driveRight" };
-  private Drive drive;
+  private AlphaController controller;
 
   @Override
   public void init() {
-    super.init();
-    drive = new Drive(hardwareMap, DRIVE_DEVICE_NAMES);
-    if (drive.hasNull() && status != Status.FAILED)
-      updateTelemetry(Status.FAILED, "Reason", "null in drive");
+    controller = new AlphaController(hardwareMap, gamepad1);
+    if (controller.hasNull())
+      setFailed("null in controller");
   }
 
   @Override
   public void loop() {
-    drive.setPower(gamepad1);
+    controller.update();
     updateTelemetry();
   }
 
   private void updateTelemetry() {
-    updateTelemetry("Motor Power", drive);
+    updateTelemetry("State", controller);
   }
 }

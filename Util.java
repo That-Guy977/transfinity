@@ -1,66 +1,37 @@
 package org.firstinspires.ftc.transfinity;
 
-import java.util.HashMap;
+import java.lang.annotation.*;
 import java.util.Locale;
-import java.util.Map;
 
-import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 
-class Drive extends HardwareDeviceGroup<DcMotor> {
-  Drive(HardwareMap hardwareMap, String... deviceNames) {
-    for (String deviceName: deviceNames) {
-      DcMotor motor = hardwareMap.get(DcMotor.class, deviceName);
-      devices.put(deviceName, motor);
-      motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-      motor.setDirection(deviceName.endsWith("Right") ? DcMotor.Direction.FORWARD : DcMotor.Direction.REVERSE);
-    }
-  }
+@Sigma("δ")
+abstract class Delta<T extends HardwareDevice> extends Zeta {
+  protected T device;
+  protected Class<T> type;
 
-  void setPower(Gamepad gamepad) {
-    double powerLeft = gamepad.left_stick_y == 0 ? 0 : -gamepad.left_stick_y;
-    double powerRight = gamepad.right_stick_y == 0 ? 0 : -gamepad.right_stick_y;
-    devices.get("driveLeft").setPower(powerLeft);
-    devices.get("driveRight").setPower(powerRight);
+  protected void init(String deviceName) {
+    device = hardwareMap.get(type, deviceName);
+    if (device == null && status != Status.FAILED)
+      setFailed(String.format(Locale.ENGLISH, "null %s", deviceName));
   }
 
   @Override
-  public String toString() {
-    return String.format(Locale.ENGLISH, "[%.2f, %.2f]", devices.values().stream().map(DcMotor::getPower).toArray());
-  }
-}
-
-class ArmGrab extends HardwareDeviceGroup<Servo> {
-  private double position = 0;
-
-  ArmGrab(HardwareMap hardwareMap, String... deviceNames) {
-    for (String deviceName: deviceNames) {
-      Servo servo = hardwareMap.get(Servo.class, deviceName);
-      devices.put(deviceName, servo);
-      servo.setDirection(deviceName.endsWith("Left") ? Servo.Direction.FORWARD : Servo.Direction.REVERSE);
-    }
-  }
-
-  double getPosition() {
-    return position;
-  }
-
-  void setPosition(double pos) {
-    position = pos;
-    for (Servo servo: devices.values())
-      servo.setPosition(position);
-  }
-
+  public abstract void init();
   @Override
-  public String toString() {
-    return String.format(Locale.ENGLISH, "%.2f", position);
-  }
+  public abstract void loop();
+  protected abstract void updateTelemetry();
 }
 
-abstract class HardwareDeviceGroup<T extends HardwareDevice> {
-  protected final Map<String, T> devices = new HashMap<>();
-  @Override
-  public abstract String toString();
-  boolean hasNull() {
-    return devices.containsValue(null);
-  }
+enum Status {
+  INITIALIZING,
+  READY,
+  ACTIVE,
+  STOPPED,
+  FAILED
 }
+
+@Inherited
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@interface Sigma { String value(); }
