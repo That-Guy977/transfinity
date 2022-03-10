@@ -280,15 +280,6 @@ abstract class HardwareDevicePair<T extends HardwareDevice> implements Controlle
   }
 }
 
-abstract class HardwareDeviceGroup<T extends HardwareDevice> implements Controller {
-  protected final Map<String, T> devices = new HashMap<>();
-
-  @Override
-  public boolean hasNull() {
-    return devices.containsValue(null);
-  }
-}
-
 interface Controller {
   @Override
   String toString();
