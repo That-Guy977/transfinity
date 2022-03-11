@@ -17,6 +17,12 @@ public class Gamma extends Zeta {
   }
 
   @Override
+  public void start() {
+    super.start();
+    controller.beta.armPitch.start();
+  }
+
+  @Override
   public void loop() {
     controller.update();
     updateTelemetry();
