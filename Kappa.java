@@ -2,10 +2,10 @@ package org.firstinspires.ftc.transfinity;
 
 import java.util.LinkedHashMap;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Sigma("κ")
-@TeleOp(name="Kappa", group="κ")
+@Autonomous(name="Kappa", group="κ", preselectTeleOp="Gamma")
 public class Kappa extends Zeta {
   private KappaController controller;
 
