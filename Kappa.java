@@ -4,14 +4,14 @@ import java.util.LinkedHashMap;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@Sigma("γ")
-@TeleOp(name="Gamma", group="γ")
-public class Gamma extends Zeta {
-  private GammaController controller;
+@Sigma("κ")
+@TeleOp(name="Kappa", group="κ")
+public class Kappa extends Zeta {
+  private KappaController controller;
 
   @Override
   public void init() {
-    controller = new GammaController(hardwareMap, gamepad1, gamepad2);
+    controller = new KappaController(hardwareMap);
     if (controller.hasNull() && status != Status.FAILED)
       setFailed("null in controller");
   }

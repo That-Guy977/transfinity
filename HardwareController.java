@@ -32,7 +32,7 @@ class AlphaController extends GroupController {
   AlphaController(HardwareMap hardwareMap, Gamepad gamepad) {
     super(hardwareMap, gamepad);
     drive = new Drive();
-    groups.add(drive);
+    controllers.add(drive);
   }
 
   void update() {
@@ -129,8 +129,8 @@ class BetaController extends GroupController {
     super(hardwareMap, gamepad);
     armGrab = new ArmGrab();
     armPitch = new ArmPitch();
-    groups.add(armGrab);
-    groups.add(armPitch);
+    controllers.add(armGrab);
+    controllers.add(armPitch);
     armGrab.disable();
     armPitch.init();
   }
@@ -179,7 +179,7 @@ class LambdaController extends GroupController {
   LambdaController(HardwareMap hardwareMap, Gamepad gamepad) {
     super(hardwareMap, gamepad);
     carousel = new Carousel();
-    groups.add(carousel);
+    controllers.add(carousel);
   }
 
   void update() {
@@ -195,21 +195,55 @@ class LambdaController extends GroupController {
 
 // class ThetaController extends GroupController {}
 
-class GammaController implements Controller {
-  private final List<GroupController> controllers = new ArrayList<>();
+class GammaController extends ControllerGroupController {
   protected final AlphaController alpha;
   protected final BetaController beta;
   protected final LambdaController lambda;
   // protected final ThetaController theta;
 
-  GammaController(HardwareMap hardwareMap, Gamepad... gamepads) {
-    alpha = new AlphaController(hardwareMap, gamepads[0]);
-    beta = new BetaController(hardwareMap, gamepads[1]);
-    lambda = new LambdaController(hardwareMap, gamepads[0]);
-    // theta = new ThetaController(hardwareMap, gamepads[1]);
+  GammaController(HardwareMap hardwareMap, Gamepad primary, Gamepad secondary) {
+    super(hardwareMap, primary, secondary);
+    alpha = new AlphaController(hardwareMap, primary);
+    beta = new BetaController(hardwareMap, secondary);
+    lambda = new LambdaController(hardwareMap, primary);
+    // theta = new ThetaController(hardwareMap, secondary);
+    controllers.addAll(Arrays.asList(alpha, beta, lambda/*, theta*/));
+  }
+}
+
+class KappaController extends ControllerGroupController {
+  protected final AlphaController alpha;
+  protected final BetaController beta;
+  protected final LambdaController lambda;
+  // protected final ThetaController theta;
+
+  KappaController(HardwareMap hardwareMap) {
+    super(hardwareMap, new Gamepad());
+    alpha = new AlphaController(hardwareMap, gamepad);
+    beta = new BetaController(hardwareMap, gamepad);
+    lambda = new LambdaController(hardwareMap, gamepad);
+    // theta = new ThetaController(hardwareMap, gamepad);
     controllers.addAll(Arrays.asList(alpha, beta, lambda/*, theta*/));
   }
 
+  @Override
+  void update() {
+    super.update();
+  }
+}
+
+abstract class ControllerGroupController extends GroupController {
+  protected final List<GroupController> controllers = new ArrayList<>();
+
+  protected ControllerGroupController(HardwareMap hardwareMap, Gamepad gamepad) {
+    super(hardwareMap, gamepad);
+  }
+
+  protected ControllerGroupController(HardwareMap hardwareMap, Gamepad primary, Gamepad secondary) {
+    super(hardwareMap, primary, secondary);
+  }
+
+  @Override
   void update() {
     controllers.forEach(GroupController::update);
   }
@@ -224,27 +258,29 @@ class GammaController implements Controller {
         .toArray()
     );
   }
-
-  @Override
-  public boolean hasNull() {
-    return controllers.stream().reduce(false, (acc, controller) -> acc || controller.hasNull(), (a, b) -> a || b);
-  }
 }
 
 abstract class GroupController implements Controller {
-  protected final List<Controller> groups = new ArrayList<>();
+  protected final List<Controller> controllers = new ArrayList<>();
   protected final HardwareMap hardwareMap;
-  protected final Gamepad gamepad;
+  protected final Gamepad gamepad, secondary;
 
-  GroupController(HardwareMap hardwareMap, Gamepad gamepad) {
+  protected GroupController(HardwareMap hardwareMap, Gamepad gamepad) {
     this.hardwareMap = hardwareMap;
     this.gamepad = gamepad;
+    this.secondary = null;
+  }
+
+  protected GroupController(HardwareMap hardwareMap, Gamepad primary, Gamepad secondary) {
+    this.hardwareMap = hardwareMap;
+    this.gamepad = primary;
+    this.secondary = secondary;
   }
 
   abstract void update();
   @Override
   public boolean hasNull() {
-    return groups.stream().reduce(false, (acc, group) -> acc || group.hasNull(), (a, b) -> a || b);
+    return controllers.stream().reduce(false, (acc, controllers) -> acc || controllers.hasNull(), (a, b) -> a || b);
   }
 }
 
@@ -252,7 +288,7 @@ abstract class HardwareDeviceSingle<T extends HardwareDevice> implements Control
   protected final T device;
   protected final String deviceName;
 
-  HardwareDeviceSingle(HardwareMap hardwareMap, String deviceName, Class<T> type) {
+  protected HardwareDeviceSingle(HardwareMap hardwareMap, String deviceName, Class<T> type) {
     this.deviceName = deviceName;
     this.device = hardwareMap.tryGet(type, deviceName);
   }
@@ -267,7 +303,7 @@ abstract class HardwareDevicePair<T extends HardwareDevice> implements Controlle
   protected final T deviceLeft, deviceRight;
   protected final String deviceName;
 
-  HardwareDevicePair(HardwareMap hardwareMap, String deviceName, Class<T> type) {
+  protected HardwareDevicePair(HardwareMap hardwareMap, String deviceName, Class<T> type) {
     this.deviceName = deviceName;
     this.deviceLeft = hardwareMap.tryGet(type, deviceName + "Left");
     this.deviceRight = hardwareMap.tryGet(type, deviceName + "Right");
