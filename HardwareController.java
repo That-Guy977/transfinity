@@ -97,7 +97,7 @@ class BetaController extends GroupController {
     ArmPitch() {
       super(hardwareMap, "armPitch", DcMotor.class);
       if (device == null) return;
-      device.setDirection(DcMotor.Direction.FORWARD);
+      device.setDirection(DcMotor.Direction.REVERSE);
       device.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
@@ -110,7 +110,7 @@ class BetaController extends GroupController {
     }
 
     void init() {
-      device.setPower(-0.01);
+      device.setPower(-0.1);
     }
 
     void start() {
@@ -155,36 +155,35 @@ class LambdaController extends GroupController {
   final Carousel carousel;
 
   class Carousel extends HardwareDeviceSingle<DcMotor> {
-    Carousel() {
+    Carousel(Team team) {
       super(hardwareMap, "carousel", DcMotor.class);
       if (device == null) return;
-      device.setDirection(DcMotor.Direction.FORWARD);
+      device.setDirection(team == Team.RED ? DcMotor.Direction.FORWARD : DcMotor.Direction.REVERSE);
       device.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    int getDirection() {
-      return (int) device.getPower();
+    boolean getPowered() {
+      return device.getPower() != 0;
     }
 
-    void setDirection(int direction) {
-      device.setPower(direction);
+    void setPowered(boolean active) {
+      device.setPower(active ? 1 : 0);
     }
 
     @Override
     public String toString() {
-      return String.format(Locale.ENGLISH, "%d", getDirection());
+      return String.valueOf(getPowered());
     }
   }
 
-  LambdaController(HardwareMap hardwareMap, Gamepad gamepad) {
+  LambdaController(Team team, HardwareMap hardwareMap, Gamepad gamepad) {
     super(hardwareMap, gamepad);
-    carousel = new Carousel();
+    carousel = new Carousel(team);
     controllers.add(carousel);
   }
 
   void update() {
-    int direction = Boolean.compare(gamepad.dpad_right, gamepad.dpad_left);
-    carousel.setDirection(direction);
+    carousel.setPowered(gamepad.left_bumper);
   }
 
   @Override
@@ -201,11 +200,11 @@ class GammaController extends ControllerGroupController {
   protected final LambdaController lambda;
   // protected final ThetaController theta;
 
-  GammaController(HardwareMap hardwareMap, Gamepad primary, Gamepad secondary) {
+  GammaController(Team team, HardwareMap hardwareMap, Gamepad primary, Gamepad secondary) {
     super(hardwareMap, primary, secondary);
     alpha = new AlphaController(hardwareMap, primary);
     beta = new BetaController(hardwareMap, secondary);
-    lambda = new LambdaController(hardwareMap, primary);
+    lambda = new LambdaController(team, hardwareMap, primary);
     // theta = new ThetaController(hardwareMap, secondary);
     controllers.addAll(Arrays.asList(alpha, beta, lambda/*, theta*/));
   }
@@ -217,11 +216,11 @@ class KappaController extends ControllerGroupController {
   protected final LambdaController lambda;
   // protected final ThetaController theta;
 
-  KappaController(HardwareMap hardwareMap) {
+  KappaController(Team team, HardwareMap hardwareMap) {
     super(hardwareMap, new Gamepad());
     alpha = new AlphaController(hardwareMap, gamepad);
     beta = new BetaController(hardwareMap, gamepad);
-    lambda = new LambdaController(hardwareMap, gamepad);
+    lambda = new LambdaController(team, hardwareMap, gamepad);
     // theta = new ThetaController(hardwareMap, gamepad);
     controllers.addAll(Arrays.asList(alpha, beta, lambda/*, theta*/));
   }

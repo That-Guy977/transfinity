@@ -11,7 +11,7 @@ public class Kappa extends Zeta {
 
   @Override
   public void init() {
-    controller = new KappaController(hardwareMap);
+    controller = new KappaController(Team.RED, hardwareMap);
     if (controller.hasNull() && status != Status.FAILED)
       setFailed("null in controller");
   }

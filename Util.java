@@ -31,6 +31,10 @@ enum Status {
   FAILED
 }
 
+enum Team {
+  RED, BLUE
+}
+
 @Inherited
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

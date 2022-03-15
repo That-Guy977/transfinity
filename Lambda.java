@@ -9,7 +9,7 @@ public class Lambda extends Zeta {
 
   @Override
   public void init() {
-    controller = new LambdaController(hardwareMap, gamepad1);
+    controller = new LambdaController(Team.RED, hardwareMap, gamepad1);
     if (controller.hasNull())
       setFailed("null in controller");  }
 

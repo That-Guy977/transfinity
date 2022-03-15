@@ -11,9 +11,12 @@ public class Gamma extends Zeta {
 
   @Override
   public void init() {
-    controller = new GammaController(hardwareMap, gamepad1, gamepad2);
-    if (controller.hasNull() && status != Status.FAILED)
+    controller = new GammaController(Team.RED, hardwareMap, gamepad1, gamepad2);
+    if (controller.hasNull() && status != Status.FAILED) {
       setFailed("null in controller");
+      return;
+    }
+    controller.beta.armPitch.init();
   }
 
   @Override

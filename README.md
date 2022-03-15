@@ -6,6 +6,7 @@
 | Theta   | `θ` | Hat Control Code
 | Gamma   | `γ` | TeleOp Code
 | Kappa   | `κ` | Autonomous Code
+| Iota    | `ι` | Reset Code
 | Zeta    | `ζ` | Base Class
 | Delta   | `δ` | Single-Component Testing
 | Epsilon | `ε` | Temporary System Testing
