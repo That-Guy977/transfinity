@@ -3,233 +3,10 @@ package org.firstinspires.ftc.transfinity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
-import com.qualcomm.robotcore.hardware.*;
-
-class AlphaController extends GroupController {
-  final Drive drive;
-
-  class Drive extends HardwareDevicePair<DcMotor> {
-    Drive() {
-      super(hardwareMap, "drive", DcMotor.class);
-      if (hasNull()) return;
-      deviceLeft.setDirection(DcMotor.Direction.REVERSE);
-      deviceRight.setDirection(DcMotor.Direction.FORWARD);
-    }
-
-    void setPower(double powerLeft, double powerRight) {
-      deviceLeft.setPower(powerLeft);
-      deviceRight.setPower(powerRight);
-    }
-
-    @Override
-    public String toString() {
-      return String.format(Locale.ENGLISH, "[%.2f, %.2f]", deviceLeft.getPower(), deviceRight.getPower());
-    }
-  }
-
-  AlphaController(HardwareMap hardwareMap, Gamepad gamepad) {
-    super(hardwareMap, gamepad);
-    drive = new Drive();
-    controllers.add(drive);
-  }
-
-  void update() {
-    double powerLeft = gamepad.left_stick_y == 0 ? 0 : -gamepad.left_stick_y;
-    double powerRight = gamepad.right_stick_y == 0 ? 0 : -gamepad.right_stick_y;
-    drive.setPower(powerLeft, powerRight);
-  }
-
-  @Override
-  public String toString() {
-    return drive.toString();
-  }
-}
-
-class BetaController extends GroupController {
-  final ArmGrab armGrab;
-  final ArmPitch armPitch;
-  private boolean grabbed = false;
-  private boolean grabToggle = false;
-
-  class ArmGrab extends HardwareDevicePair<Servo> {
-    private boolean active = false;
-
-    ArmGrab() {
-      super(hardwareMap, "armGrab", Servo.class);
-      if (hasNull()) return;
-      deviceLeft.setDirection(Servo.Direction.FORWARD);
-      deviceRight.setDirection(Servo.Direction.FORWARD);
-    }
-
-    void setGrabbed(boolean grabbed) {
-      if (!active) enable();
-      deviceLeft.setPosition(grabbed ? 0 : 1);
-      deviceRight.setPosition(grabbed ? 1 : 0);
-    }
-
-    void enable() {
-      active = true;
-      deviceLeft.scaleRange(0.5, 0.75);
-      deviceRight.scaleRange(0.25, 0.5);
-      deviceLeft.setPosition(1);
-      deviceRight.setPosition(0);
-    }
-
-    void disable() {
-      active = false;
-      deviceLeft.scaleRange(0, 1);
-      deviceRight.scaleRange(0, 1);
-      deviceLeft.setPosition(1);
-      deviceRight.setPosition(0);
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(deviceLeft.getPosition() == 0);
-    }
-  }
-
-  class ArmPitch extends HardwareDeviceSingle<DcMotor> {
-    private static final double TICKS_PER_REV = 1440;
-
-    ArmPitch() {
-      super(hardwareMap, "armPitch", DcMotor.class);
-      if (device == null) return;
-      device.setDirection(DcMotor.Direction.REVERSE);
-      device.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    }
-
-    double getPosition() {
-      return device.getCurrentPosition() / TICKS_PER_REV;
-    }
-
-    void setPosition(double position) {
-      device.setTargetPosition((int) Math.round(Math.min(Math.max(position, 0), 1) * TICKS_PER_REV));
-    }
-
-    void init() {
-      device.setPower(-0.1);
-    }
-
-    void start() {
-      device.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-      device.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-      device.setPower(0.5);
-    }
-
-    @Override
-    public String toString() {
-      return String.format(Locale.ENGLISH, "%.2f", getPosition());
-    }
-  }
-
-  BetaController(HardwareMap hardwareMap, Gamepad gamepad) {
-    super(hardwareMap, gamepad);
-    armGrab = new ArmGrab();
-    armPitch = new ArmPitch();
-    controllers.add(armGrab);
-    controllers.add(armPitch);
-    armGrab.disable();
-    armPitch.init();
-  }
-
-  void update() {
-    if (grabToggle != gamepad.a) {
-      grabToggle = !grabToggle;
-      if (!grabToggle)
-        grabbed = !grabbed;
-    }
-    armGrab.setGrabbed(grabbed);
-    armPitch.setPosition(armPitch.getPosition() + Boolean.compare(gamepad.dpad_up, gamepad.dpad_down) * 1e-1);
-  }
-
-  @Override
-  public String toString() {
-    return String.format(Locale.ENGLISH, "[%s, %s]", armPitch, armGrab);
-  }
-}
-
-class LambdaController extends GroupController {
-  final Carousel carousel;
-
-  class Carousel extends HardwareDeviceSingle<DcMotor> {
-    Carousel(Team team) {
-      super(hardwareMap, "carousel", DcMotor.class);
-      if (device == null) return;
-      device.setDirection(team == Team.RED ? DcMotor.Direction.FORWARD : DcMotor.Direction.REVERSE);
-      device.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    }
-
-    boolean getPowered() {
-      return device.getPower() != 0;
-    }
-
-    void setPowered(boolean active) {
-      device.setPower(active ? 1 : 0);
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(getPowered());
-    }
-  }
-
-  LambdaController(Team team, HardwareMap hardwareMap, Gamepad gamepad) {
-    super(hardwareMap, gamepad);
-    carousel = new Carousel(team);
-    controllers.add(carousel);
-  }
-
-  void update() {
-    carousel.setPowered(gamepad.left_bumper);
-  }
-
-  @Override
-  public String toString() {
-    return carousel.toString();
-  }
-}
-
-// class ThetaController extends GroupController {}
-
-class GammaController extends ControllerGroupController {
-  protected final AlphaController alpha;
-  protected final BetaController beta;
-  protected final LambdaController lambda;
-  // protected final ThetaController theta;
-
-  GammaController(Team team, HardwareMap hardwareMap, Gamepad primary, Gamepad secondary) {
-    super(hardwareMap, primary, secondary);
-    alpha = new AlphaController(hardwareMap, primary);
-    beta = new BetaController(hardwareMap, secondary);
-    lambda = new LambdaController(team, hardwareMap, primary);
-    // theta = new ThetaController(hardwareMap, secondary);
-    controllers.addAll(Arrays.asList(alpha, beta, lambda/*, theta*/));
-  }
-}
-
-class KappaController extends ControllerGroupController {
-  protected final AlphaController alpha;
-  protected final BetaController beta;
-  protected final LambdaController lambda;
-  // protected final ThetaController theta;
-
-  KappaController(Team team, HardwareMap hardwareMap) {
-    super(hardwareMap, new Gamepad());
-    alpha = new AlphaController(hardwareMap, gamepad);
-    beta = new BetaController(hardwareMap, gamepad);
-    lambda = new LambdaController(team, hardwareMap, gamepad);
-    // theta = new ThetaController(hardwareMap, gamepad);
-    controllers.addAll(Arrays.asList(alpha, beta, lambda/*, theta*/));
-  }
-
-  @Override
-  void update() {
-    super.update();
-  }
-}
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 abstract class ControllerGroupController extends GroupController {
   protected final List<GroupController> controllers = new ArrayList<>();
@@ -277,6 +54,12 @@ abstract class GroupController implements Controller {
   }
 
   abstract void update();
+
+  @Override
+  public void init() {
+    controllers.forEach(Controller::init);
+  }
+
   @Override
   public boolean hasNull() {
     return controllers.stream().reduce(false, (acc, controllers) -> acc || controllers.hasNull(), (a, b) -> a || b);
@@ -312,10 +95,4 @@ abstract class HardwareDevicePair<T extends HardwareDevice> implements Controlle
   public boolean hasNull() {
     return deviceLeft == null || deviceRight == null;
   }
-}
-
-interface Controller {
-  @Override
-  String toString();
-  boolean hasNull();
 }

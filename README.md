@@ -8,7 +8,6 @@
 | Kappa   | `κ` | Autonomous Code
 | Iota    | `ι` | Reset Code
 | Zeta    | `ζ` | Base Class
-| Delta   | `δ` | Single-Component Testing
 | Epsilon | `ε` | Temporary System Testing
 | Sigma   | `σ` | Configuration Settings
 | Omega   | `ω` | 3D Models

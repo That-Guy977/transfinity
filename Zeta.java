@@ -9,23 +9,21 @@ import java.util.Map;
 import static java.util.concurrent.TimeUnit.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@Sigma("ζ")
-@TeleOp(name="Zeta", group="ζ")
-public class Zeta extends OpMode {
+abstract class Zeta<T extends GroupController> extends OpMode {
   protected Status status = Status.INITIALIZING;
+  protected T controller;
 
   @Override
-  public void init() {}
+  public void init() {
+    if (checkNull()) return;
+    controller.init();
+  }
 
   @Override
   public void init_loop() {
-    if (status != Status.FAILED) {
-      if (status != Status.READY) updateTelemetry(Status.READY);
-      Sigma sigma = getClass().getAnnotation(Sigma.class);
-      updateTelemetry("Sigma", sigma == null ? "null" : sigma.value());
-    }
+    if (status != Status.FAILED)
+      updateTelemetry(Status.READY);
   }
 
   @Override
@@ -37,7 +35,8 @@ public class Zeta extends OpMode {
 
   @Override
   public void loop() {
-    updateTime();
+    controller.update();
+    updateTelemetry("State", controller);
   }
 
   @Override
@@ -54,11 +53,6 @@ public class Zeta extends OpMode {
     telemetry.update();
   }
 
-  protected void updateTelemetry(Status status, LinkedHashMap<String, Object> telemetryData) {
-    this.status = status;
-    updateTelemetry(telemetryData);
-  }
-
   protected void updateTelemetry(String caption, Object value) {
     LinkedHashMap<String, Object> telemetryData = new LinkedHashMap<>(1);
     telemetryData.put(caption, value);
@@ -66,16 +60,30 @@ public class Zeta extends OpMode {
   }
 
   protected void updateTelemetry(Status status) {
-    updateTelemetry(status, new LinkedHashMap<>(0));
-  }
-
-  protected void updateTime() {
+    this.status = status;
     updateTelemetry(new LinkedHashMap<>(0));
   }
 
-  protected void setFailed(Object value) {
-    this.status = Status.FAILED;
-    updateTelemetry("Reason", value);
+  protected void updateTelemetry() {
+    LinkedHashMap<String, Object> telemetryData = new LinkedHashMap<>(controller.controllers.size() + 1);
+    telemetryData.put("State", controller);
+    controller.controllers.forEach(
+      (controller) -> telemetryData.put(
+        controller.getClass()
+          .getSimpleName()
+          .replace("Controller", ""),
+        controller
+      )
+    );
+    updateTelemetry(telemetryData);
+  }
+
+  protected boolean checkNull() {
+    if (controller.hasNull()) {
+      updateTelemetry(Status.FAILED);
+      updateTelemetry("Reason", "null in controller");
+      return true;
+    } else return false;
   }
 
   private String getTime() {
