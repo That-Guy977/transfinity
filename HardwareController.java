@@ -8,15 +8,14 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-abstract class ControllerGroupController extends GroupController {
-  protected final List<GroupController> controllers = new ArrayList<>();
-
+abstract class ControllerGroupController extends GroupController<GroupController<? extends Controller>> {
   protected ControllerGroupController(HardwareMap hardwareMap, Gamepad gamepad) {
-    super(hardwareMap, gamepad);
+    this(hardwareMap, gamepad, null);
   }
 
   protected ControllerGroupController(HardwareMap hardwareMap, Gamepad primary, Gamepad secondary) {
     super(hardwareMap, primary, secondary);
+
   }
 
   @Override
@@ -36,15 +35,13 @@ abstract class ControllerGroupController extends GroupController {
   }
 }
 
-abstract class GroupController implements Controller {
-  protected final List<Controller> controllers = new ArrayList<>();
+abstract class GroupController<T extends Controller> implements Controller {
+  protected final List<T> controllers = new ArrayList<>();
   protected final HardwareMap hardwareMap;
   protected final Gamepad gamepad, secondary;
 
   protected GroupController(HardwareMap hardwareMap, Gamepad gamepad) {
-    this.hardwareMap = hardwareMap;
-    this.gamepad = gamepad;
-    this.secondary = null;
+    this(hardwareMap, gamepad, null);
   }
 
   protected GroupController(HardwareMap hardwareMap, Gamepad primary, Gamepad secondary) {

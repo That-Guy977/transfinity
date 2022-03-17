@@ -2,7 +2,8 @@ package org.firstinspires.ftc.transfinity;
 
 import java.util.Arrays;
 
-import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 class KappaController extends ControllerGroupController {
   protected final Position position;

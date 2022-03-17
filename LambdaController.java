@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.transfinity;
 
-import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
-class LambdaController extends GroupController {
+class LambdaController extends GroupController<Controller> {
   final Carousel carousel;
 
   class Carousel extends HardwareDeviceSingle<DcMotor> {

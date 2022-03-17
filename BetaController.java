@@ -1,10 +1,15 @@
 package org.firstinspires.ftc.transfinity;
 
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
-class BetaController extends GroupController {
+class BetaController extends GroupController<Controller> {
   final ArmGrab armGrab;
   final ArmPitch armPitch;
   private boolean grabbed = false;
@@ -54,7 +59,11 @@ class BetaController extends GroupController {
   }
 
   class ArmPitch extends HardwareDeviceSingle<DcMotor> {
-    private static final double TICKS_PER_REV = 1440;
+    private static final int RANGE = 690;
+    private static final int TOLERANCE = 25;
+    private boolean started = false;
+    private int min = 0;
+    private int max = 0;
 
     ArmPitch() {
       super(hardwareMap, "armPitch", DcMotor.class);
@@ -66,25 +75,39 @@ class BetaController extends GroupController {
     @Override
     public void init() {
       device.setPower(-0.1);
-    }
-
-    double getPosition() {
-      return device.getCurrentPosition() / TICKS_PER_REV;
-    }
-
-    void setPosition(double position) {
-      device.setTargetPosition((int) Math.round(Math.min(Math.max(position, 0), 1) * TICKS_PER_REV));
+      Timer timer = new Timer(true);
+      timer.schedule(new TimerTask() {
+        @Override
+        public void run() {
+          start();
+          timer.cancel();
+        }
+      }, 3000);
     }
 
     void start() {
-      device.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-      device.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-      device.setPower(0.5);
+      if (!started) {
+        started = true;
+        device.setPower(0);
+        min = device.getCurrentPosition();
+        max = min + RANGE;
+      }
+    }
+
+    void updateDir(int dir) {
+      int position = device.getCurrentPosition();
+      if (dir > 0 && position < max - TOLERANCE) {
+        if (position >= max - TOLERANCE * 6) device.setPower(0.4);
+        else device.setPower(0.8);
+      } else if (dir < 0 && position > min + TOLERANCE * 2) {
+        if (position <= min + TOLERANCE * 12) device.setPower(-0.1);
+        else device.setPower(-0.4);
+      } else device.setPower(0);
     }
 
     @Override
     public String toString() {
-      return String.format(Locale.ENGLISH, "%.2f", getPosition());
+      return String.format(Locale.ENGLISH, "%.1f", device.getPower());
     }
   }
 
@@ -96,6 +119,7 @@ class BetaController extends GroupController {
     controllers.add(armPitch);
   }
 
+  @Override
   void update() {
     if (grabToggle != gamepad.a) {
       grabToggle = !grabToggle;
@@ -103,11 +127,11 @@ class BetaController extends GroupController {
         grabbed = !grabbed;
     }
     armGrab.setGrabbed(grabbed);
-    armPitch.setPosition(armPitch.getPosition() + Boolean.compare(gamepad.dpad_up, gamepad.dpad_down) * 1e-1);
+    armPitch.updateDir(Boolean.compare(gamepad.dpad_up, gamepad.dpad_down));
   }
 
   @Override
   public String toString() {
-    return String.format(Locale.ENGLISH, "[%s, %s]", armPitch, armGrab);
+    return String.format(Locale.ENGLISH, "[%s, %s]", armGrab, armPitch);
   }
 }

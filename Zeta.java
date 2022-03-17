@@ -10,7 +10,7 @@ import static java.util.concurrent.TimeUnit.*;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-abstract class Zeta<T extends GroupController> extends OpMode {
+class Zeta<T extends GroupController<? extends Controller>> extends OpMode {
   protected Status status = Status.INITIALIZING;
   protected T controller;
 
@@ -36,7 +36,7 @@ abstract class Zeta<T extends GroupController> extends OpMode {
   @Override
   public void loop() {
     controller.update();
-    updateTelemetry("State", controller);
+    updateTelemetry();
   }
 
   @Override
@@ -53,35 +53,32 @@ abstract class Zeta<T extends GroupController> extends OpMode {
     telemetry.update();
   }
 
-  protected void updateTelemetry(String caption, Object value) {
-    LinkedHashMap<String, Object> telemetryData = new LinkedHashMap<>(1);
-    telemetryData.put(caption, value);
-    updateTelemetry(telemetryData);
-  }
-
   protected void updateTelemetry(Status status) {
     this.status = status;
     updateTelemetry(new LinkedHashMap<>(0));
   }
 
   protected void updateTelemetry() {
-    LinkedHashMap<String, Object> telemetryData = new LinkedHashMap<>(controller.controllers.size() + 1);
+    LinkedHashMap<String, Object> telemetryData = new LinkedHashMap<>();
     telemetryData.put("State", controller);
-    controller.controllers.forEach(
-      (controller) -> telemetryData.put(
-        controller.getClass()
-          .getSimpleName()
-          .replace("Controller", ""),
-        controller
-      )
-    );
+    if (controller instanceof ControllerGroupController)
+      controller.controllers.forEach(
+        (controller) -> telemetryData.put(
+          controller.getClass()
+            .getSimpleName()
+            .replace("Controller", ""),
+          controller
+        )
+      );
     updateTelemetry(telemetryData);
   }
 
   protected boolean checkNull() {
     if (controller.hasNull()) {
-      updateTelemetry(Status.FAILED);
-      updateTelemetry("Reason", "null in controller");
+      status = Status.FAILED;
+      LinkedHashMap<String, Object> telemetryData = new LinkedHashMap<>(1);
+      telemetryData.put("Reason", "null in controller");
+      updateTelemetry(telemetryData);
       return true;
     } else return false;
   }

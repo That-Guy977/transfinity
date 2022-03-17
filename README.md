@@ -9,5 +9,5 @@
 | Iota    | `ι` | Reset Code
 | Zeta    | `ζ` | Base Class
 | Epsilon | `ε` | Temporary System Testing
-| Sigma   | `σ` | Configuration Settings
+| Sigma   | `σ` | Hardware Configuration
 | Omega   | `ω` | 3D Models
