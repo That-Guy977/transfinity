@@ -23,3 +23,10 @@ enum Team {
 enum Position {
   CAROUSEL, WAREHOUSE
 }
+
+enum AutoCycle {
+  IDLE,
+  PRELOAD,
+  CAROUSEL,
+  WAREHOUSE,
+}
