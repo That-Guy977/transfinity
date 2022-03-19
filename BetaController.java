@@ -16,8 +16,6 @@ class BetaController extends GroupController<Controller> {
   private boolean grabToggle = false;
 
   class ArmGrab extends HardwareDevicePair<Servo> {
-    private boolean active = false;
-
     ArmGrab() {
       super(hardwareMap, "armGrab", Servo.class);
       if (hasNull()) return;
@@ -27,29 +25,15 @@ class BetaController extends GroupController<Controller> {
 
     @Override
     public void init() {
-      disable();
-    }
-
-    void setGrabbed(boolean grabbed) {
-      if (!active) enable();
-      deviceLeft.setPosition(grabbed ? 0 : 1);
-      deviceRight.setPosition(grabbed ? 1 : 0);
-    }
-
-    void enable() {
-      active = true;
       deviceLeft.scaleRange(0.5, 0.75);
       deviceRight.scaleRange(0.25, 0.5);
       deviceLeft.setPosition(1);
       deviceRight.setPosition(0);
     }
 
-    void disable() {
-      active = false;
-      deviceLeft.scaleRange(0, 1);
-      deviceRight.scaleRange(0, 1);
-      deviceLeft.setPosition(1);
-      deviceRight.setPosition(0);
+    void setGrabbed(boolean grabbed) {
+      deviceLeft.setPosition(grabbed ? 0 : 1);
+      deviceRight.setPosition(grabbed ? 1 : 0);
     }
 
     @Override
