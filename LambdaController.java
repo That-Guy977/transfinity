@@ -10,7 +10,7 @@ class LambdaController extends GroupController<Controller> {
   class Carousel extends HardwareDeviceSingle<DcMotor> {
     Carousel(Team team) {
       super(hardwareMap, "carousel", DcMotor.class);
-      if (device == null) return;
+      if (hasNull()) return;
       device.setDirection(team == Team.RED ? DcMotor.Direction.FORWARD : DcMotor.Direction.REVERSE);
       device.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }

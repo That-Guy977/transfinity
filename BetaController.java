@@ -67,7 +67,7 @@ class BetaController extends GroupController<Controller> {
 
     ArmPitch() {
       super(hardwareMap, "armPitch", DcMotor.class);
-      if (device == null) return;
+      if (hasNull()) return;
       device.setDirection(DcMotor.Direction.REVERSE);
       device.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }

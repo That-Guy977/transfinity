@@ -61,6 +61,9 @@ abstract class GroupController<T extends Controller> implements Controller {
   public boolean hasNull() {
     return controllers.stream().reduce(false, (acc, controllers) -> acc || controllers.hasNull(), (a, b) -> a || b);
   }
+
+  @Override
+  public abstract String toString();
 }
 
 abstract class HardwareDeviceSingle<T extends HardwareDevice> implements Controller {
@@ -76,6 +79,9 @@ abstract class HardwareDeviceSingle<T extends HardwareDevice> implements Control
   public boolean hasNull() {
     return device == null;
   }
+
+  @Override
+  public abstract String toString();
 }
 
 abstract class HardwareDevicePair<T extends HardwareDevice> implements Controller {
@@ -92,4 +98,7 @@ abstract class HardwareDevicePair<T extends HardwareDevice> implements Controlle
   public boolean hasNull() {
     return deviceLeft == null || deviceRight == null;
   }
+
+  @Override
+  public abstract String toString();
 }
