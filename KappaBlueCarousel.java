@@ -8,4 +8,15 @@ public class KappaBlueCarousel extends Kappa {
   public void init() {
     init(Team.BLUE, Position.CAROUSEL);
   }
+
+  @Override
+  public void loop() {
+    gamepad.reset();
+    double time = getRuntime();
+    if (time < 0.1) idle();
+    else if (time < 6.8) preload();
+    else if (time < 13.0) idle();
+    else if (time < 28.0) warehouse();
+    super.loop();
+  }
 }

@@ -30,7 +30,7 @@ class AlphaController extends GroupController<Controller> {
     double motorPower(double gamepadStick) {
       double gamepadDeviation = Math.abs(gamepadStick);
       if (gamepadDeviation < 0.1) return 0;
-      else if (gamepadDeviation > 0.9) return -Math.copySign(0.9, gamepadStick);
+      else if (gamepadDeviation > 0.9) return -Math.copySign(1, gamepadStick);
       else return -Math.copySign(0.5, gamepadStick);
     }
 

@@ -17,16 +17,9 @@ enum Status {
 
 enum Team {
   RED, BLUE;
-  static Team DEFAULT = RED;
+  static final Team DEFAULT = RED;
 }
 
 enum Position {
   CAROUSEL, WAREHOUSE
-}
-
-enum AutoCycle {
-  IDLE,
-  PRELOAD,
-  CAROUSEL,
-  WAREHOUSE,
 }

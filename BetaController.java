@@ -78,6 +78,11 @@ class BetaController extends GroupController<Controller> {
       }
     }
 
+    double getPosition() {
+      if (!started) return 0;
+      return (double) (device.getCurrentPosition() - min) / RANGE;
+    }
+
     void updateDir(int dir) {
       int position = device.getCurrentPosition();
       if (dir > 0 && position < max - TOLERANCE) {
