@@ -14,6 +14,7 @@ class BetaController extends GroupController<Controller> {
   final ArmPitch armPitch;
   private boolean grabbed = false;
   private boolean grabToggle = false;
+  private boolean locked = false;
 
   class ArmGrab extends HardwareDevicePair<Servo> {
     ArmGrab() {
@@ -31,14 +32,14 @@ class BetaController extends GroupController<Controller> {
       deviceRight.setPosition(0);
     }
 
-    void setGrabbed(boolean grabbed) {
+    void setGrabbed() {
       deviceLeft.setPosition(grabbed ? 0 : 1);
       deviceRight.setPosition(grabbed ? 1 : 0);
     }
 
     @Override
     public String toString() {
-      return String.valueOf(deviceLeft.getPosition() == 0);
+      return String.valueOf(grabbed);
     }
   }
 
@@ -48,6 +49,7 @@ class BetaController extends GroupController<Controller> {
     private boolean started = false;
     private int min = 0;
     private int max = 0;
+    private double lockPos = -1;
 
     ArmPitch() {
       super(hardwareMap, "armPitch", DcMotor.class);
@@ -84,6 +86,7 @@ class BetaController extends GroupController<Controller> {
     }
 
     void updateDir(int dir) {
+      if (!locked && lockPos != -1) lockPos = -1;
       int position = device.getCurrentPosition();
       if (dir > 0 && position < max - TOLERANCE) {
         if (position >= max - TOLERANCE * 6) device.setPower(0.4);
@@ -94,9 +97,16 @@ class BetaController extends GroupController<Controller> {
       } else device.setPower(0);
     }
 
+    void lock() {
+      if (lockPos == -1) lockPos = getPosition();
+      if (getPosition() < lockPos) updateDir(1);
+      else updateDir(0);
+    }
+
     @Override
     public String toString() {
-      return String.format(Locale.ENGLISH, "%.1f", device.getPower());
+      String format = "%.1f (%s$)".replace("$", locked ? " %.2f" : "");
+      return String.format(Locale.ENGLISH, format, device.getPower(), locked, lockPos);
     }
   }
 
@@ -115,8 +125,11 @@ class BetaController extends GroupController<Controller> {
       if (!grabToggle)
         grabbed = !grabbed;
     }
-    armGrab.setGrabbed(grabbed);
-    armPitch.updateDir(Boolean.compare(gamepad.dpad_up, gamepad.dpad_down));
+    armGrab.setGrabbed();
+    int dir = Boolean.compare(gamepad.dpad_up, gamepad.dpad_down);
+    locked = gamepad.left_bumper && dir == 0;
+    if (locked) armPitch.lock();
+    else armPitch.updateDir(dir);
   }
 
   @Override

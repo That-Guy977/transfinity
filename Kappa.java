@@ -180,7 +180,7 @@ abstract class Kappa extends Zeta<KappaController> {
   }
 
   protected void carousel() {
-    gamepad.left_bumper = true;
+    gamepad.right_bumper = true;
   }
 
   protected void raiseArm() {

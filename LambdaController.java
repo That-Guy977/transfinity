@@ -41,7 +41,7 @@ class LambdaController extends GroupController<Controller> {
   }
 
   void update() {
-    carousel.setPowered(gamepad.left_bumper);
+    carousel.setPowered(gamepad.right_bumper);
   }
 
   @Override
