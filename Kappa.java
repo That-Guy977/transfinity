@@ -59,7 +59,7 @@ abstract class Kappa extends Zeta<KappaController> {
     else if (time < 1.8) forwards();
     else if (time < 1.9) idle();
     else if (time < 2.3) raiseArm();
-    else if (time < 3.2) { if (dirRight) weakRight(); else weakLeft(); raiseArm(); }
+    else if (time < 3.0) { if (dirRight) weakRight(); else weakLeft(); raiseArm(); }
     else if (time < 3.4) raiseArm();
     else if (time < 3.5) {
       if (!preloadPlaced) {
@@ -77,11 +77,12 @@ abstract class Kappa extends Zeta<KappaController> {
   protected void warehouse() {
     if (warehouseStartTime == -1) warehouseStartTime = getRuntime();
     double time = getRuntime() - warehouseStartTime;
+    boolean red = team == Team.RED;
     switch (position) {
       case WAREHOUSE:
-        boolean red = team == Team.RED;
         if (time < 0.3) idle();
-        else if (time < 0.75) { if (red) right(); else left(); }
+        else if (time < 0.5) { if (red) right(); else left(); }
+        else if (time < 0.7) { if (red) weakBackRight(); else weakBackLeft(); }
         else if (time < 0.8) idle();
         else if (time < 3.4) forwards();
         else if (time < 3.5) idle();
@@ -106,15 +107,13 @@ abstract class Kappa extends Zeta<KappaController> {
           case BLUE:
             if (time < 0.1) idle();
             else if (time < 0.4) left();
-            else if (time < 0.5) weakRight();
-            else if (time < 0.7) weakLeft();
-            else if (time < 0.9) idle();
+            else if (time < 1.1) idle();
             break;
         }
         if (time < 7.0) idle();
         else if (time < 10.0) forwards();
-        else if (time < 11.0) weakRight();
-        else if (time < 14.3) forwards();
+        else if (time < 10.5) { if (red) weakRight(); else weakLeft(); }
+        else if (time < 13.5) forwards();
         break;
     }
   }
