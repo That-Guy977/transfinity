@@ -59,7 +59,7 @@ abstract class Kappa extends Zeta<KappaController> {
     else if (time < 1.8) forwards();
     else if (time < 1.9) idle();
     else if (time < 2.3) raiseArm();
-    else if (time < 3.05) { if (dirRight) weakRight(); else weakLeft(); raiseArm(); }
+    else if (time < 3.15) { if (dirRight) weakRight(); else weakLeft(); raiseArm(); }
     else if (time < 3.4) raiseArm();
     else if (time < 3.5) {
       if (!preloadPlaced) {
@@ -67,7 +67,7 @@ abstract class Kappa extends Zeta<KappaController> {
         gamepad.a = true;
       }
     } else if (time < 3.7) raiseArm();
-    else if (time < 4.5) { if (dirRight) weakBackLeft(); else weakBackRight(); raiseArm(); }
+    else if (time < 4.5) { if (dirRight) weakBackRight(); else weakBackLeft(); raiseArm(); }
     else if (time < 4.7) idle();
     else if (time < 4.9) down();
     else if (time < 5.0) idle();
@@ -83,21 +83,21 @@ abstract class Kappa extends Zeta<KappaController> {
         if (time < 0.3) idle();
         else if (time < 0.5) forwards();
         else if (time < 0.7) { if (red) right(); else left(); }
-        else if (time < 1.3) { if (red) weakBackRight(); else weakBackLeft(); }
+        else if (time < 1.3) { if (red) weakBackLeft(); else weakBackRight(); }
         else if (time < 1.4) idle();
-        else if (time < 2.0) forwards();
-        else if (time < 2.3) { if (red) weakRight(); else weakLeft(); }
-        else if (time < 4.2) forwards();
-        else if (time < 4.3) idle();
-        else if (time < 4.8) { if (red) left(); else right(); }
-        else if (time < 4.9) idle();
-        else if (time < 6.4) forwards();
-        else if (time < 6.6) idle();
-        else if (time < 7.1) { if (red) right(); else left(); }
-        else if (time < 7.2) idle();
-        else if (time < 8.4) forwards();
-        else if (time < 8.7) idle();
-        else if (time < 8.9) { if (red) right(); else left(); }
+        else if (time < 2.4) forwards();
+        else if (time < 2.7) { if (red) weakRight(); else weakLeft(); }
+        else if (time < 4.6) forwards();
+        else if (time < 4.7) idle();
+        else if (time < 5.2) { if (red) left(); else right(); }
+        else if (time < 5.3) idle();
+        else if (time < 6.8) forwards();
+        else if (time < 7.0) idle();
+        else if (time < 7.5) { if (red) right(); else left(); }
+        else if (time < 7.6) idle();
+        else if (time < 8.8) forwards();
+        else if (time < 9.1) idle();
+        else if (time < 9.3) { if (red) right(); else left(); }
         break;
       case CAROUSEL:
         switch (team) {
@@ -109,14 +109,15 @@ abstract class Kappa extends Zeta<KappaController> {
             break;
           case BLUE:
             if (time < 0.1) idle();
-            else if (time < 0.4) left();
-            else if (time < 1.1) idle();
+            else if (time < 0.8) weakRight();
+            else if (time < 1.4) weakLeft();
+            else if (time < 1.5) weakRight();
             break;
         }
         if (time < 7.0) idle();
         else if (time < 10.0) forwards();
-        else if (time < 10.5) { if (red) weakRight(); else weakLeft(); }
-        else if (time < 13.5) forwards();
+        else if (time < 10.2) { if (red) weakRight(); else weakLeft(); }
+        else if (time < 13.8) forwards();
         break;
     }
   }
@@ -153,12 +154,12 @@ abstract class Kappa extends Zeta<KappaController> {
     gamepad.right_stick_y = -1;
   }
 
-  protected void weakBackLeft() {
+  protected void weakBackRight() {
     gamepad.left_stick_y = 1;
     gamepad.right_stick_y = 0.5f;
   }
 
-  protected void weakBackRight() {
+  protected void weakBackLeft() {
     gamepad.left_stick_y = 0.5f;
     gamepad.right_stick_y = 1;
   }
