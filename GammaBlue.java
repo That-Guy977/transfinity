@@ -2,7 +2,7 @@ package org.firstinspires.ftc.transfinity;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name="Gamma (B)", group="γ")
+@TeleOp(name="TeleOp (Blue)", group="γ")
 public class GammaBlue extends Gamma {
   @Override
   public void init() {

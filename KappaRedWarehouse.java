@@ -2,7 +2,7 @@ package org.firstinspires.ftc.transfinity;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="Kappa (RW)", group="κ", preselectTeleOp="Gamma (R)")
+@Autonomous(name="Kappa (RW)", group="κ", preselectTeleOp="TeleOp (Red)")
 public class KappaRedWarehouse extends Kappa {
   @Override
   public void init() {

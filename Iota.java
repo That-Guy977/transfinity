@@ -3,7 +3,7 @@ package org.firstinspires.ftc.transfinity;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-@Autonomous(name="Iota", group="ι")
+@Autonomous(name="Reset", group="ι")
 public class Iota extends Zeta<IotaController> {
   @Override
   public void init() {
