@@ -59,7 +59,7 @@ abstract class Kappa extends Zeta<KappaController> {
     else if (time < 1.8) forwards();
     else if (time < 1.9) idle();
     else if (time < 2.3) raiseArm();
-    else if (time < 3.0) { if (dirRight) weakRight(); else weakLeft(); raiseArm(); }
+    else if (time < 3.05) { if (dirRight) weakRight(); else weakLeft(); raiseArm(); }
     else if (time < 3.4) raiseArm();
     else if (time < 3.5) {
       if (!preloadPlaced) {
@@ -81,20 +81,23 @@ abstract class Kappa extends Zeta<KappaController> {
     switch (position) {
       case WAREHOUSE:
         if (time < 0.3) idle();
-        else if (time < 0.5) { if (red) right(); else left(); }
-        else if (time < 0.7) { if (red) weakBackRight(); else weakBackLeft(); }
-        else if (time < 0.8) idle();
-        else if (time < 3.4) forwards();
-        else if (time < 3.5) idle();
-        else if (time < 3.9) { if (red) left(); else right(); }
-        else if (time < 4.0) idle();
-        else if (time < 5.2) forwards();
-        else if (time < 5.4) idle();
-        else if (time < 5.7) { if (red) right(); else left(); }
-        else if (time < 5.9) idle();
-        else if (time < 7.0) forwards();
+        else if (time < 0.5) forwards();
+        else if (time < 0.7) { if (red) right(); else left(); }
+        else if (time < 1.3) { if (red) weakBackRight(); else weakBackLeft(); }
+        else if (time < 1.4) idle();
+        else if (time < 2.0) forwards();
+        else if (time < 2.3) { if (red) weakRight(); else weakLeft(); }
+        else if (time < 4.2) forwards();
+        else if (time < 4.3) idle();
+        else if (time < 4.8) { if (red) left(); else right(); }
+        else if (time < 4.9) idle();
+        else if (time < 6.4) forwards();
+        else if (time < 6.6) idle();
+        else if (time < 7.1) { if (red) right(); else left(); }
         else if (time < 7.2) idle();
-        else if (time < 7.5) { if (red) right(); else left(); }
+        else if (time < 8.4) forwards();
+        else if (time < 8.7) idle();
+        else if (time < 8.9) { if (red) right(); else left(); }
         break;
       case CAROUSEL:
         switch (team) {
