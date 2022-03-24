@@ -3,7 +3,6 @@
 | Alpha   | `α` | Movement Control Code
 | Beta    | `β` | Arm Control Code
 | Lambda  | `λ` | Carousel Control Code
-| Theta   | `θ` | Hat Control Code
 | Gamma   | `γ` | TeleOp Code
 | Kappa   | `κ` | Autonomous Code
 | Iota    | `ι` | Reset Code
