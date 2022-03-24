@@ -4,10 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 @Autonomous(name="Reset", group="ι")
-public class Iota extends Zeta<IotaController> {
+public class Iota extends Zeta<KappaController> {
   @Override
   public void init() {
-    controller = new IotaController(hardwareMap, new Gamepad());
+    controller = new KappaController(Team.DEFAULT, hardwareMap, new Gamepad());
     super.init();
   }
 
