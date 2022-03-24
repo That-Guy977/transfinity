@@ -56,7 +56,7 @@ abstract class Kappa extends Zeta<KappaController> {
     if (preloadStartTime == -1) preloadStartTime = getRuntime();
     double time = getRuntime() - preloadStartTime;
     if (time < 0.3) idle();
-    else if (time < 1.8) slowForwards();
+    else if (time < 1.8) forwards();
     else if (time < 1.9) idle();
     else if (time < 2.3) raiseArm();
     else if (time < 3.2) { if (dirRight) weakRight(); else weakLeft(); raiseArm(); }
@@ -71,7 +71,7 @@ abstract class Kappa extends Zeta<KappaController> {
     else if (time < 4.7) idle();
     else if (time < 4.9) down();
     else if (time < 5.0) idle();
-    else if (time < 6.6) slowBackwards();
+    else if (time < 6.6) backwards();
   }
 
   protected void warehouse() {
@@ -83,7 +83,7 @@ abstract class Kappa extends Zeta<KappaController> {
         if (time < 0.3) idle();
         else if (time < 0.75) { if (red) right(); else left(); }
         else if (time < 0.8) idle();
-        else if (time < 3.4) slowForwards();
+        else if (time < 3.4) forwards();
         else if (time < 3.5) idle();
         else if (time < 3.9) { if (red) left(); else right(); }
         else if (time < 4.0) idle();
@@ -105,16 +105,16 @@ abstract class Kappa extends Zeta<KappaController> {
             break;
           case BLUE:
             if (time < 0.1) idle();
-            else if (time < 0.4) right();
+            else if (time < 0.4) left();
             else if (time < 0.5) weakRight();
             else if (time < 0.7) weakLeft();
             else if (time < 0.9) idle();
             break;
         }
         if (time < 7.0) idle();
-        else if (time < 10.0) slowForwards();
+        else if (time < 10.0) forwards();
         else if (time < 11.0) weakRight();
-        else if (time < 14.3) slowForwards();
+        else if (time < 14.3) forwards();
         break;
     }
   }
@@ -122,21 +122,11 @@ abstract class Kappa extends Zeta<KappaController> {
   protected void idle() {}
 
   protected void forwards() {
-    gamepad.left_stick_y = -1;
-    gamepad.right_stick_y = -1;
-  }
-
-  protected void backwards() {
-    gamepad.left_stick_y = 1;
-    gamepad.right_stick_y = 1;
-  }
-
-  protected void slowForwards() {
     gamepad.left_stick_y = -0.5f;
     gamepad.right_stick_y = -0.5f;
   }
 
-  protected void slowBackwards() {
+  protected void backwards() {
     gamepad.left_stick_y = 0.5f;
     gamepad.right_stick_y = 0.5f;
   }

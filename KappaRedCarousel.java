@@ -17,11 +17,11 @@ public class KappaRedCarousel extends Kappa {
     double time = getRuntime();
     if (time < 0.1) idle();
     else if (time < 7.2) preload();
-    else if (time < 7.6) slowForwards();
+    else if (time < 7.6) forwards();
     else if (time < 7.8) idle();
     else if (time < 8.2) right();
     else if (time < 8.4) idle();
-    else if (time < 11.1) slowBackwards();
+    else if (time < 11.1) backwards();
     else if (time < 11.2) idle();
     else if (time < 13.4) carousel();
     else if (time < 28.0) warehouse();
