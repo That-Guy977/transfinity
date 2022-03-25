@@ -2,6 +2,7 @@ package org.firstinspires.ftc.transfinity;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Stream;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -45,6 +46,14 @@ abstract class Kappa extends Zeta<KappaController> {
     controller.beta.armPitch.start();
     preloadPosition = readPreLoadPosition();
     if (preloadPosition == 0) preloadPosition = 3;
+  }
+
+  @Override
+  public void stop() {
+    super.stop();
+    gamepad.reset();
+    gamepad1.reset();
+    gamepad2.reset();
   }
 
   private int readPreLoadPosition() {
@@ -105,14 +114,14 @@ abstract class Kappa extends Zeta<KappaController> {
           case RED:
             if (time < 0.1) idle();
             else if (time < 0.6) weakRight();
-            else if (time < 1.0) weakLeft();
-            else if (time < 1.1) weakRight();
+            else if (time < 1.1) weakLeft();
+            else if (time < 1.4) weakRight();
             break;
           case BLUE:
             if (time < 0.1) idle();
-            else if (time < 0.8) weakRight();
-            else if (time < 1.4) weakLeft();
-            else if (time < 1.5) weakRight();
+            else if (time < 1.9) weakLeft();
+            else if (time < 2.2) weakRight();
+            else if (time < 2.3) weakLeft();
             break;
         }
         if (time < 7.0) idle();

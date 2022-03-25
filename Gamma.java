@@ -7,6 +7,8 @@ abstract class Gamma extends Zeta<GammaController> {
   protected void init(Team team) {
     controller = new GammaController(team, hardwareMap, gamepad1, gamepad2);
     super.init();
+    gamepad1.reset();
+    gamepad2.reset();
   }
 
   @Override

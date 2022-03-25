@@ -15,12 +15,12 @@ public class KappaBlueCarousel extends Kappa {
     double time = getRuntime();
     if (time < 0.1) idle();
     else if (time < 7.2) preload();
-    else if (time < 8.7) forwards();
+    else if (time < 8.9) forwards();
     else if (time < 9.2) idle();
-    else if (time < 10.7) weakBackRight();
-    else if (time < 10.8) idle();
+    else if (time < 10.2) weakBackRight();
+    else if (time < 10.4) idle();
     else if (time < 11.4) weakBackLeft();
-    else if (time < 13.8) carousel();
+    else if (time < 13.9) carousel();
     else if (time < 28.0) warehouse();
     super.loop();
   }

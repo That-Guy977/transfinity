@@ -22,8 +22,9 @@ public class KappaRedCarousel extends Kappa {
     else if (time < 8.2) right();
     else if (time < 8.4) idle();
     else if (time < 11.25) backwards();
-    else if (time < 11.4) idle();
-    else if (time < 13.7) carousel();
+    else if (time < 11.4) weakBackRight();
+    else if (time < 11.5) idle();
+    else if (time < 14.1) carousel();
     else if (time < 28.0) warehouse();
     super.loop();
   }
