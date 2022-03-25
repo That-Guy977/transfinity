@@ -2,15 +2,12 @@ package org.firstinspires.ftc.transfinity;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.stream.Stream;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 abstract class Kappa extends Zeta<KappaController> {
   protected Team team;
   protected Position position;
-  protected TouchSensor touch;
   protected Gamepad gamepad = new Gamepad();
   protected int preloadPosition = 0;
   protected boolean preloadPlaced = false;
@@ -24,7 +21,6 @@ abstract class Kappa extends Zeta<KappaController> {
     controller = new KappaController(team, hardwareMap, gamepad);
     this.team = team;
     this.position = position;
-    touch = hardwareMap.get(TouchSensor.class, "touch");
     super.init();
     gamepad.a = true;
     controller.update();
@@ -119,9 +115,9 @@ abstract class Kappa extends Zeta<KappaController> {
             break;
           case BLUE:
             if (time < 0.1) idle();
-            else if (time < 1.9) weakLeft();
-            else if (time < 2.2) weakRight();
-            else if (time < 2.3) weakLeft();
+            else if (time < 0.7) left();
+            else if (time < 1.3) weakRight();
+            else if (time < 1.6) weakLeft();
             break;
         }
         if (time < 7.0) idle();
