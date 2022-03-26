@@ -108,10 +108,10 @@ abstract class Kappa extends Zeta<KappaController> {
             else if (time < 1.25) weakLeft();
             break;
         }
-        if (time < 7.0) idle();
-        else if (time < 10.0) forwards();
-        else if (time < 10.2) { if (red) weakRight(); else weakLeft(); }
-        else if (time < 13.8) forwards();
+        if (time < 6.0) idle();
+        else if (time < 9.0) forwards();
+        else if (time < 9.2) { if (red) weakRight(); else weakLeft(); }
+        else if (time < 13.4) forwards();
         break;
     }
   }
