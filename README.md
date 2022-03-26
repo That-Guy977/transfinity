@@ -1,12 +1,12 @@
 | Set     |     | Use |
 | :--     | :-: | :-- |
-| Alpha   | `α` | Movement Control Code
-| Beta    | `β` | Arm Control Code
-| Lambda  | `λ` | Carousel Control Code
-| Gamma   | `γ` | TeleOp Code
-| Kappa   | `κ` | Autonomous Code
-| Iota    | `ι` | Reset Code
+| Alpha   | `α` | Movement Control
+| Beta    | `β` | Arm Control
+| Lambda  | `λ` | Carousel Control
+| Gamma   | `γ` | TeleOp OpModes
+| Kappa   | `κ` | Autonomous OpModes
+| Iota    | `ι` | Reset OpMode
 | Zeta    | `ζ` | Base Class
-| Epsilon | `ε` | Temporary System Testing
+| Epsilon | `ε` | System Testing
 | Sigma   | `σ` | Hardware Configuration
 | Omega   | `ω` | 3D Models
