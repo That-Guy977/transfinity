@@ -126,7 +126,7 @@ class BetaController extends GroupController<Controller> {
   }
 
   class ArmPitch extends HardwareDeviceSingle<DcMotor> {
-    private static final int RANGE = 690;
+    private static final int RANGE = 720;
     private static final int TOLERANCE = 25;
     private boolean started = false;
     private int min = 0;
