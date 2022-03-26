@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.transfinity;
 
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -8,6 +9,87 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+
+class GammaController extends ControllerGroupController {
+  protected final AlphaController alpha;
+  protected final BetaController beta;
+  protected final LambdaController lambda;
+
+  GammaController(Team team, HardwareMap hardwareMap, Gamepad primary, Gamepad secondary) {
+    super(hardwareMap, primary, secondary);
+    alpha = new AlphaController(hardwareMap, primary);
+    beta = new BetaController(hardwareMap, secondary);
+    lambda = new LambdaController(team, hardwareMap, primary);
+    controllers.addAll(Arrays.asList(alpha, beta, lambda));
+  }
+}
+
+class KappaController extends ControllerGroupController {
+  protected final AlphaController alpha;
+  protected final BetaController beta;
+  protected final LambdaController lambda;
+
+  KappaController(Team team, HardwareMap hardwareMap, Gamepad gamepad) {
+    super(hardwareMap, gamepad);
+    alpha = new AlphaController(hardwareMap, gamepad);
+    beta = new BetaController(hardwareMap, gamepad);
+    lambda = new LambdaController(team, hardwareMap, gamepad);
+    controllers.addAll(Arrays.asList(alpha, beta, lambda));
+  }
+}
+
+class AlphaController extends GroupController<Controller> {
+  final Drive drive;
+
+  class Drive extends HardwareDevicePair<DcMotor> {
+    Drive() {
+      super(hardwareMap, "drive", DcMotor.class);
+      if (hasNull()) return;
+      deviceLeft.setDirection(DcMotor.Direction.REVERSE);
+      deviceRight.setDirection(DcMotor.Direction.FORWARD);
+    }
+
+    @Override
+    public void init() {
+      setPower(0, 0);
+    }
+
+    void setPower(double powerLeft, double powerRight) {
+      deviceLeft.setPower(powerLeft);
+      deviceRight.setPower(powerRight);
+    }
+
+    double motorPower(double gamepadStick) {
+      double gamepadDeviation = Math.abs(gamepadStick);
+      if (gamepadDeviation < 0.1) return 0;
+      else if (gamepadDeviation > 0.9) return -Math.copySign(1, gamepadStick);
+      else return -Math.copySign(0.5, gamepadStick);
+    }
+
+    @Override
+    public String toString() {
+      return String.format(Locale.ENGLISH, "[%.1f, %.1f]", deviceLeft.getPower(), deviceRight.getPower());
+    }
+  }
+
+  AlphaController(HardwareMap hardwareMap, Gamepad gamepad) {
+    super(hardwareMap, gamepad);
+    drive = new Drive();
+    controllers.add(drive);
+  }
+
+  @Override
+  void update() {
+    double powerLeft = drive.motorPower(gamepad.left_stick_y);
+    double powerRight = drive.motorPower(gamepad.right_stick_y);
+    drive.setPower(powerLeft, powerRight);
+  }
+
+  @Override
+  public String toString() {
+    return drive.toString();
+  }
+}
 
 class BetaController extends GroupController<Controller> {
   final ArmGrab armGrab;
@@ -135,5 +217,51 @@ class BetaController extends GroupController<Controller> {
   @Override
   public String toString() {
     return String.format(Locale.ENGLISH, "[%s, %s]", armGrab, armPitch);
+  }
+}
+
+class LambdaController extends GroupController<Controller> {
+  final Carousel carousel;
+
+  class Carousel extends HardwareDeviceSingle<DcMotor> {
+    Carousel(Team team) {
+      super(hardwareMap, "carousel", DcMotor.class);
+      if (hasNull()) return;
+      device.setDirection(team == Team.RED ? DcMotor.Direction.FORWARD : DcMotor.Direction.REVERSE);
+      device.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
+    @Override
+    public void init() {
+      setPowered(false);
+    }
+
+    boolean getPowered() {
+      return device.getPower() != 0;
+    }
+
+    void setPowered(boolean active) {
+      device.setPower(active ? 1 : 0);
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(getPowered());
+    }
+  }
+
+  LambdaController(Team team, HardwareMap hardwareMap, Gamepad gamepad) {
+    super(hardwareMap, gamepad);
+    carousel = new Carousel(team);
+    controllers.add(carousel);
+  }
+
+  void update() {
+    carousel.setPowered(gamepad.right_bumper);
+  }
+
+  @Override
+  public String toString() {
+    return carousel.toString();
   }
 }
