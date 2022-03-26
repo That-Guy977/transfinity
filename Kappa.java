@@ -9,7 +9,6 @@ abstract class Kappa extends Zeta<KappaController> {
   protected Team team;
   protected Position position;
   protected Gamepad gamepad = new Gamepad();
-  protected int preloadPosition = 0;
   protected boolean preloadPlaced = false;
   protected double preloadStartTime = -1;
   protected double warehouseStartTime = -1;
@@ -40,8 +39,6 @@ abstract class Kappa extends Zeta<KappaController> {
     super.start();
     resetStartTime();
     controller.beta.armPitch.start();
-    preloadPosition = readPreLoadPosition();
-    if (preloadPosition == 0) preloadPosition = 3;
   }
 
   @Override
@@ -52,10 +49,6 @@ abstract class Kappa extends Zeta<KappaController> {
     gamepad2.reset();
   }
 
-  private int readPreLoadPosition() {
-    return 0;
-  }
-
   protected void preload() {
     boolean dirRight = (team == Team.RED) == (position == Position.CAROUSEL);
     if (preloadStartTime == -1) preloadStartTime = getRuntime();
@@ -64,7 +57,7 @@ abstract class Kappa extends Zeta<KappaController> {
     else if (time < 1.8) forwards();
     else if (time < 1.9) idle();
     else if (time < 2.3) raiseArm();
-    else if (time < 3.15) { if (dirRight) weakRight(); else weakLeft(); raiseArm(); }
+    else if (time < 3.12) { if (dirRight) weakRight(); else weakLeft(); raiseArm(); }
     else if (time < 3.4) raiseArm();
     else if (time < 3.5) {
       if (!preloadPlaced) {
@@ -99,11 +92,6 @@ abstract class Kappa extends Zeta<KappaController> {
         else if (time < 6.8) forwards();
         else if (time < 7.0) idle();
         else if (time < 7.5) { if (red) right(); else left(); }
-        else if (time < 9.4) idle(); //--
-        else if (time < 7.6) idle();
-        else if (time < 8.8) forwards();
-        else if (time < 9.1) idle();
-        else if (time < 9.3) { if (red) right(); else left(); }
         break;
       case CAROUSEL:
         switch (team) {
@@ -115,9 +103,9 @@ abstract class Kappa extends Zeta<KappaController> {
             break;
           case BLUE:
             if (time < 0.1) idle();
-            else if (time < 0.7) left();
-            else if (time < 1.3) weakRight();
-            else if (time < 1.6) weakLeft();
+            else if (time < 0.5) left();
+            else if (time < 0.8) weakRight();
+            else if (time < 1.25) weakLeft();
             break;
         }
         if (time < 7.0) idle();
@@ -183,19 +171,6 @@ abstract class Kappa extends Zeta<KappaController> {
   }
 
   protected void raiseArm() {
-    double targetPosition;
-    switch (preloadPosition) {
-      case 1:
-        targetPosition = 0.18;
-        break;
-      case 2:
-        targetPosition = 0.58;
-        break;
-      default:
-      case 3:
-        targetPosition = 0.87;
-        break;
-    }
-    if (targetPosition > controller.beta.armPitch.getPosition()) up();
+    if (controller.beta.armPitch.getPosition() < 0.87) up();
   }
 }
